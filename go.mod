@@ -1,1 +1,3 @@
-module "hello-world-web-app"
+module github.com/rlr524/go-hw-web-app
+
+go 1.16
