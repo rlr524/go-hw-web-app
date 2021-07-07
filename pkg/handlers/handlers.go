@@ -1,3 +1,6 @@
+/*
+Package handlers implements all royte handlers and uses the render package to render templates.
+*/
 package handlers
 
 import (
@@ -6,17 +9,17 @@ import (
 )
 
 // Home is the / page handler. All web handler functions need to take in, as params,
-// the ResponseWriter method and a pointer to the Request method
+// the ResponseWriter(w) method and a pointer to the Request(r) method
 func Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "home.gohtml")
+	render.UseTemplate(w, "home.page.gohtml")
 }
 
 // About is the /about page handler
 func About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "about.gohtml")
+	render.UseTemplate(w, "about.page.gohtml")
 }
 
 // Madison is the /madison page handler
 func Madison(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "madison.gohtml")
+	render.UseTemplate(w, "madison.page.gohtml")
 }
