@@ -17,7 +17,8 @@ const portNumber = ":3030"
 func main() {
 	// Instead of putting our page data into the main() function, here
 	// we are still calling the HandleFunc function from the http package but
-	// instead we're passing in our page handlers as closures
+	// instead we're passing in our page handlers as closures and these
+	// functions become our routes
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/about", handlers.About)
 	http.HandleFunc("/madison", handlers.Madison)
