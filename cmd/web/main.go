@@ -6,7 +6,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/rlr524/go-hw-web-app/pkg/config"
 	"github.com/rlr524/go-hw-web-app/pkg/handlers"
+	"github.com/rlr524/go-hw-web-app/pkg/template"
+	"log"
 	"net/http"
 )
 
@@ -19,6 +22,14 @@ func main() {
 	// we are still calling the HandleFunc function from the http package but
 	// instead we're passing in our page handlers as closures and these
 	// functions become our routes
+	var app config.AppConfig
+	tc, err := template.CreateTemplateCache()
+	if err != nil {
+		log.Fatal("cannot create template cache")
+	}
+
+	app.TemplateCache = tc
+
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/about", handlers.About)
 	http.HandleFunc("/madison", handlers.Madison)
