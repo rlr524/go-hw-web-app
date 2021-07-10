@@ -6,6 +6,8 @@ package template
 import (
 	"bytes"
 	"fmt"
+	"github.com/rlr524/go-hw-web-app/pkg/config"
+	"github.com/rlr524/go-hw-web-app/pkg/models"
 	"html/template"
 	"log"
 	"net/http"
@@ -14,26 +16,46 @@ import (
 
 var functions = template.FuncMap{}
 
-// RenderTemplate renders templates using html/template
-func RenderTemplate(w http.ResponseWriter, tmpl string) {
-	// Get the template cache from the app config
+var app *config.AppConfig
 
-	// Assign the CreateTemplateCache function to tc
-	tc, err := CreateTemplateCache()
-	if err != nil {
-		log.Fatal(err)
+// NewTemplates sets the config for the template package
+func NewTemplates(a *config.AppConfig) {
+	app = a
+}
+
+// AddDefaultData allows to use the TemplateData struct to add default data for all pages
+func AddDefaultData(td *models.TemplateData) *models.TemplateData {
+	// Add data here as needed
+	return td
+}
+
+// RenderTemplate renders templates using html/template
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+	var tc map[string]*template.Template
+	if app.UseCache {
+		// Get the template cache from the app config
+		tc = app.TemplateCache
+	} else {
+		// Create a new template cache
+		tc, _ = CreateTemplateCache()
 	}
+
 	// Check that there is a template in the template cache map and assign it to t if so, else fail
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal(err)
+		log.Fatal("could not get template from template cache")
 	}
+
 	// Create a buffer and assign it to buf
 	buf := new(bytes.Buffer)
+
+	// Pass in whatever data is added in the AddDefaultData function
+	td = AddDefaultData(td)
+
 	// Take the template, execute it, don't add any data, and store the value in the buffer
-	_ = t.Execute(buf, nil)
+	_ = t.Execute(buf, td)
 	// Write to the template
-	_, err = buf.WriteTo(w)
+	_, err := buf.WriteTo(w)
 	if err != nil {
 		fmt.Println("error writing template to browser", err)
 	}

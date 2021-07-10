@@ -29,10 +29,20 @@ func main() {
 	}
 
 	app.TemplateCache = tc
+	app.UseCache = false
 
-	http.HandleFunc("/", handlers.Home)
-	http.HandleFunc("/about", handlers.About)
-	http.HandleFunc("/madison", handlers.Madison)
+	// Create a repository, assign it to repo and pass it back to the NewHandlers function
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+
+	// Calls the NewTemplates function from the template package and references the AppConfig
+	// Need to reference app because we are setting app as a pointer to config.AppConfig above
+	// in that it is a var named "app" that is of type config.AppConfig
+	template.NewTemplates(&app)
+
+	http.HandleFunc("/", handlers.Repo.Home)
+	http.HandleFunc("/about", handlers.Repo.About)
+	http.HandleFunc("/madison", handlers.Repo.Madison)
 
 	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
 	_ = http.ListenAndServe(portNumber, nil)
