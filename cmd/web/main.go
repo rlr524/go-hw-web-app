@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/rlr524/go-hw-web-app/pkg/config"
 	"github.com/rlr524/go-hw-web-app/pkg/handlers"
+	"github.com/rlr524/go-hw-web-app/pkg/routes"
 	"github.com/rlr524/go-hw-web-app/pkg/template"
 	"log"
 	"net/http"
@@ -40,10 +41,14 @@ func main() {
 	// in that it is a var named "app" that is of type config.AppConfig
 	template.NewTemplates(&app)
 
-	http.HandleFunc("/", handlers.Repo.Home)
-	http.HandleFunc("/about", handlers.Repo.About)
-	http.HandleFunc("/madison", handlers.Repo.Madison)
+	// Create a server using our routes and pat router in the routes package
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes.Routes(&app),
+	}
 
 	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
-	_ = http.ListenAndServe(portNumber, nil)
+
+	err = srv.ListenAndServe()
+	log.Fatal(err)
 }
