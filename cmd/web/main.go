@@ -7,6 +7,7 @@ package main
 import (
 	"fmt"
 	"github.com/alexedwards/scs/v2"
+	"github.com/rlr524/go-hw-web-app"
 	"github.com/rlr524/go-hw-web-app/pkg/config"
 	"github.com/rlr524/go-hw-web-app/pkg/handlers"
 	"github.com/rlr524/go-hw-web-app/pkg/routes"
@@ -31,7 +32,7 @@ func main() {
 	sessionManager.Lifetime = 24 * time.Hour
 	sessionManager.Cookie.Persist = true
 	sessionManager.Cookie.SameSite = http.SameSiteLaxMode
-	sessionManager.Cookie.Secure = config.SetEnvironment()
+	sessionManager.Cookie.Secure = hello_world_web_app.SetEnvironment()
 
 	app.Session = sessionManager
 

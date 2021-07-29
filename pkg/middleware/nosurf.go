@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/justinas/nosurf"
-	"github.com/rlr524/go-hw-web-app/pkg/config"
+	"github.com/rlr524/go-hw-web-app"
 	"net/http"
 )
 
@@ -13,7 +13,7 @@ func NoSurf(next http.Handler) http.Handler {
 	csrfHandler.SetBaseCookie(http.Cookie{
 		HttpOnly: true,
 		Path:     "/",
-		Secure:   config.SetEnvironment(),
+		Secure:   hello_world_web_app.SetEnvironment(),
 		SameSite: http.SameSiteLaxMode,
 	})
 	return csrfHandler

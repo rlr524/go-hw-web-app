@@ -15,5 +15,5 @@
 vendor/
 
 # Environment variables
-pkg/config/environment.go
+environment.go
 
