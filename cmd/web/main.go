@@ -6,24 +6,35 @@ package main
 
 import (
 	"fmt"
+	"github.com/alexedwards/scs/v2"
 	"github.com/rlr524/go-hw-web-app/pkg/config"
 	"github.com/rlr524/go-hw-web-app/pkg/handlers"
 	"github.com/rlr524/go-hw-web-app/pkg/routes"
 	"github.com/rlr524/go-hw-web-app/pkg/template"
 	"log"
 	"net/http"
+	"time"
 )
 
 // In Go, the colon is required when passing the port number in a variable
 const portNumber = ":3030"
 
+var app config.AppConfig
+var sessionManager *scs.SessionManager
+
 // main is the application entry point
 func main() {
-	// Instead of putting our page data into the main() function, here
-	// we are still calling the HandleFunc function from the http package but
-	// instead we're passing in our page handlers as closures and these
-	// functions become our routes
-	var app config.AppConfig
+	// Use scs package to initialize a new session manager and configure the session lifetime
+	// of 24 hours as well as persist the cookie after the browser window is closed, allow lax
+	// treatment for same site cookie enforcement, and not require secure cookies in dev
+	sessionManager = scs.New()
+	sessionManager.Lifetime = 24 * time.Hour
+	sessionManager.Cookie.Persist = true
+	sessionManager.Cookie.SameSite = http.SameSiteLaxMode
+	sessionManager.Cookie.Secure = config.SetEnvironment()
+
+	app.Session = sessionManager
+
 	tc, err := template.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
